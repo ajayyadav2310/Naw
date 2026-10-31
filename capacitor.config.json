@@ -1,0 +1,11 @@
+{
+  "appId": "com.moneytrack.personal",
+  "appName": "MoneyTrack",
+  "webDir": "dist",
+  "backgroundColor": "#090d18",
+  "android": {
+    "backgroundColor": "#090d18",
+    "allowMixedContent": false,
+    "adjustMarginsForEdgeToEdge": "auto"
+  }
+}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#090d18">
+<meta name="color-scheme" content="dark">
+<title>MoneyTrack</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="app">
+<header><div><div class="brand">Money<span>Track</span></div><div class="sub">Your money, clearly tracked.</div></div><button class="iconbtn" data-action="page" data-page="settings" aria-label="Settings">⚙</button></header>
+
+<section id="dashboard" class="page active">
+  <div class="hero">
+    <div class="eyebrow">NET FLOW THIS MONTH</div>
+    <div class="total" id="netFlow">₹0.00</div>
+    <div class="herofoot"><div><small>Money received</small><b id="monthIncome">₹0.00</b></div><div><small>Money spent</small><b id="monthExpense">₹0.00</b></div></div>
+  </div>
+  <div class="sectionhead"><h2>My accounts</h2><button class="link" data-action="page" data-page="accounts">Manage accounts →</button></div>
+  <div class="accounts" id="accountCards"></div>
+  <div class="sectionhead"><h2>Quick actions</h2></div>
+  <div class="actions">
+    <button class="action" data-action="new" data-type="expense"><span>↗</span>Money out</button>
+    <button class="action" data-action="new" data-type="income"><span>↙</span>Money in</button>
+    <button class="action" data-action="new" data-type="transfer"><span>⇄</span>Transfer</button>
+    <button class="action" data-action="page" data-page="reports"><span>▥</span>Reports</button>
+  </div>
+  <div class="sectionhead"><h2>Recent transactions</h2><button class="link" data-action="page" data-page="transactions">See all →</button></div>
+  <div class="txlist" id="recentList"></div>
+  <p class="notice" id="dashNotice">Automatic notification and SMS tracking works only in the installed Android app. Imported entries are marked “Review” until you confirm them.</p>
+</section>
+
+<section id="add" class="page">
+  <div class="pagehead"><button class="back" data-action="page" data-page="dashboard" aria-label="Back">‹</button><h2 id="formTitle">Add transaction</h2></div>
+  <div class="segment three"><button id="typeExpense" data-action="type" data-type="expense">↗ Out</button><button id="typeIncome" data-action="type" data-type="income">↙ In</button><button id="typeTransfer" data-action="type" data-type="transfer">⇄ Transfer</button></div>
+  <div class="field"><label>Amount (₹)</label><input id="amount" type="number" min="0.01" step="0.01" placeholder="0.00" inputmode="decimal"></div>
+  <div class="field"><label id="personLabel">Paid to</label><input id="person" placeholder="Person or business" maxlength="120"></div>
+  <div class="field" id="categoryWrap"><label>Purpose / category</label><select id="category"></select></div>
+  <div class="field"><label id="accountLabel">Account</label><select id="account"></select></div>
+  <div class="field" id="toAccountWrap" hidden><label>Transfer to account</label><select id="toAccount"></select></div>
+  <div class="field"><label>Payment method</label><select id="method"><option>UPI</option><option>Bank transfer</option><option>Cash</option><option>Card</option><option>Bank / UPI</option><option>Other</option></select></div>
+  <div class="field"><label>Date and time</label><input id="date" type="datetime-local"></div>
+  <div class="field"><label>Notes (optional)</label><textarea id="notes" maxlength="500" placeholder="What was this money used for?"></textarea></div>
+  <button class="primary" data-action="save">Save transaction</button>
+  <button class="dangerbtn" id="deleteBtn" data-action="delete-current" hidden>Delete this transaction</button>
+  <p class="notice">Saved only on this device. Export a backup before uninstalling the app or clearing its data.</p>
+</section>
+
+<section id="transactions" class="page">
+  <div class="pagehead"><button class="back" data-action="page" data-page="dashboard" aria-label="Back">‹</button><h2>Transactions</h2></div>
+  <input class="search" id="search" placeholder="Search person, category, account, amount..." autocomplete="off">
+  <div class="filters" style="margin:10px 0"><select id="monthFilter"><option value="all">All months</option></select><select id="typeFilter"><option value="all">All types</option><option value="income">Money in</option><option value="expense">Money out</option><option value="transfer">Transfers</option><option value="review">Needs review</option></select></div>
+  <div class="txlist" id="allList"></div>
+</section>
+
+<section id="accounts" class="page">
+  <div class="pagehead"><button class="back" data-action="page" data-page="dashboard" aria-label="Back">‹</button><h2>Accounts</h2></div>
+  <div class="card"><div class="field"><label>Add a bank / cash account</label><input id="newAccount" placeholder="e.g. SBI Savings" maxlength="80"></div><button class="primary" data-action="add-account">Add account</button></div>
+  <div class="sectionhead"><h2>Available accounts</h2></div><div id="accountList"></div>
+  <p class="notice">Balances are calculated from your opening balance plus the transactions recorded in MoneyTrack. They are not verified live bank balances.</p>
+</section>
+
+<section id="reports" class="page">
+  <div class="pagehead"><button class="back" data-action="page" data-page="dashboard" aria-label="Back">‹</button><h2>Monthly report</h2></div>
+  <div class="field"><label>Select month</label><input id="reportMonth" type="month"></div>
+  <div class="statgrid"><div class="statbox"><small>Money received</small><b class="in" id="reportIncome">₹0</b></div><div class="statbox"><small>Money spent</small><b class="out" id="reportExpense">₹0</b></div></div>
+  <div class="statgrid" style="margin-top:10px"><div class="statbox"><small>Net flow</small><b id="reportNet">₹0</b></div><div class="statbox"><small>Transactions</small><b id="reportCount">0</b></div></div>
+  <div class="sectionhead"><h2>Spending by category</h2></div><div class="card" id="categoryReport"></div>
+  <div class="sectionhead"><h2>Income by category</h2></div><div class="card" id="incomeReport"></div>
+  <div class="sectionhead"><h2>By account</h2></div><div class="card" id="accountReport"></div>
+  <div class="sectionhead"><h2>Export your data</h2></div>
+  <button class="secondary" style="width:100%" data-action="export-csv">Download CSV</button>
+  <button class="secondary" style="width:100%;margin-top:9px" data-action="backup">Export full backup (JSON)</button>
+</section>
+
+<section id="settings" class="page">
+  <div class="pagehead"><button class="back" data-action="page" data-page="dashboard" aria-label="Back">‹</button><h2>Settings</h2></div>
+  <div class="card">
+    <div class="row"><b>MoneyTrack</b><span class="pill">Dark only · INR</span></div>
+    <p class="notice">Personal finance tracker · works offline · data stays on this device · no login.</p>
+  </div>
+
+  <div class="sectionhead"><h2>Automatic tracking</h2></div>
+  <div class="card">
+    <div id="nativeOnly">
+      <div class="statusrow"><span>Notification access</span><span class="pill" id="stNotif">…</span></div>
+      <div class="statusrow"><span>SMS permission</span><span class="pill" id="stSms">…</span></div>
+      <div class="statusrow"><span>Battery restrictions</span><span class="pill" id="stBattery">…</span></div>
+      <div class="statusrow"><span>Waiting to import</span><span class="pill" id="stPending">…</span></div>
+      <div class="btnrow">
+        <button class="secondary" data-action="enable-notif">1. Enable notification access</button>
+        <button class="secondary" data-action="enable-sms">2. Allow SMS permission (live SMS tracking)</button>
+        <button class="secondary" data-action="battery">3. Allow background activity (battery)</button>
+        <select class="small" id="smsDays" aria-label="Days of SMS to import"><option value="7">Import last 7 days</option><option value="30" selected>Import last 30 days</option><option value="90">Import last 90 days</option></select>
+        <button class="secondary" data-action="import-sms">Import recent bank SMS</button>
+        <button class="secondary" data-action="app-info">Open app info (for “Allow restricted settings”)</button>
+      </div>
+    </div>
+    <p class="notice" id="nativeStatus">Automatic tracking is available in the Android app only.</p>
+    <p class="notice">Only messages that look like a bank/UPI debit or credit are kept; OTP messages are ignored and nothing leaves your phone. Bank formats differ, so always review imported entries.</p>
+  </div>
+
+  <div class="sectionhead"><h2>Categories</h2></div>
+  <div class="card">
+    <div class="inline"><input id="newCategory" placeholder="New category" maxlength="40"><button class="secondary" data-action="add-category">Add</button></div>
+    <div class="chips" id="categoryChips"></div>
+  </div>
+
+  <div class="sectionhead"><h2>Data management</h2></div>
+  <button class="secondary" style="width:100%" data-action="export-csv">Export CSV</button>
+  <button class="secondary" style="width:100%;margin-top:9px" data-action="backup">Export backup (JSON)</button>
+  <button class="secondary" style="width:100%;margin-top:9px" data-action="restore">Restore backup</button>
+  <input id="restoreFile" type="file" accept="application/json,.json" hidden>
+  <button class="secondary danger" style="width:100%;margin-top:9px" data-action="clear-all">Delete all local data</button>
+  <p class="notice">No login, cloud sync, or bank credentials are used. MoneyTrack never asks for passwords, OTPs or PINs. Keep backups somewhere safe.</p>
+</section>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<nav class="bottom">
+<button class="active" data-action="page" data-page="dashboard"><span>⌂</span>Home</button>
+<button data-action="page" data-page="transactions"><span>▤</span>History</button>
+<button data-action="new" data-type="expense" data-page="add"><span>＋</span>Add</button>
+<button data-action="page" data-page="reports"><span>▥</span>Reports</button>
+<button data-action="page" data-page="accounts"><span>▣</span>Accounts</button>
+</nav>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>
